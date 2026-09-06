@@ -46,3 +46,15 @@ python3 examples/SerialAudio/stream_audio.py --port /dev/ttyUSB0
 Use `--list-devices` to inspect audio inputs and `--device NAME_OR_INDEX` to
 select one. The default input is mono 8 kHz audio, which fits comfortably
 within the serial link bandwidth.
+
+To stream an MP3 file instead, install `ffmpeg` and run:
+
+```sh
+sudo apt install ffmpeg
+python3 examples/SerialAudio/stream_audio.py \
+  --port /dev/ttyUSB0 \
+  --file music.mp3
+```
+
+The file is decoded to mono 8 kHz audio while it plays, so no temporary WAV
+file is created.
