@@ -56,5 +56,20 @@ python3 examples/SerialAudio/stream_audio.py \
   --file music.mp3
 ```
 
-The file is decoded to mono 8 kHz audio while it plays, so no temporary WAV
-file is created.
+The MP3 is first converted to a temporary, board-ready raw file: mono,
+unsigned 8-bit, 8 kHz audio. It is then transmitted in real time at exactly
+8,000 bytes per second by default. Samples are paced individually so the
+500000-baud serial link does not deliver large bursts followed by gaps. The
+temporary file is removed afterward.
+
+To save the converted board-ready raw audio first, then stream that raw file:
+
+```sh
+python3 examples/SerialAudio/stream_audio.py \
+  --port /dev/ttyUSB0 \
+  --file music.mp3 \
+  --raw-output music.raw
+```
+
+This keeps the converted raw file instead of deleting it. An existing raw file
+can be streamed directly with `--raw-file music.raw`.
