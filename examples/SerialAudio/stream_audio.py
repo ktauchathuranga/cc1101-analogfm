@@ -34,7 +34,14 @@ def write_samples_realtime(connection, samples, rate):
 
 
 def stream_microphone(connection, args):
-    import sounddevice as sd
+    try:
+        import sounddevice as sd
+    except ModuleNotFoundError as error:
+        raise SystemExit(
+            "Microphone support requires sounddevice. Install dependencies with: "
+            "python3 -m pip install -r "
+            "lib/CC1101_AnalogFM/examples/SerialAudio/requirements.txt"
+        ) from error
 
     with sd.InputStream(
         samplerate=args.rate,
@@ -80,12 +87,18 @@ def stream_raw_file(connection, filename, rate, blocksize):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", help="Serial port, e.g. /dev/ttyUSB0")
-    parser.add_argument("--file", help="Audio file to stream, decoded by ffmpeg")
+    source_group = parser.add_mutually_exclusive_group()
+    source_group.add_argument(
+        "--mic",
+        action="store_true",
+        help="Stream the computer microphone (the default source)",
+    )
+    source_group.add_argument("--file", help="Audio file to stream, decoded by ffmpeg")
     parser.add_argument(
         "--raw-output",
         help="Convert --file to unsigned 8-bit raw audio here before streaming",
     )
-    parser.add_argument(
+    source_group.add_argument(
         "--raw-file",
         help="Stream an existing unsigned 8-bit raw audio file",
     )
@@ -104,8 +117,6 @@ def main():
 
     if not args.port:
         parser.error("--port is required unless --list-devices is used")
-    if args.raw_file and args.file:
-        parser.error("--file and --raw-file cannot be used together")
     if args.raw_output and not args.file:
         parser.error("--raw-output requires --file")
 

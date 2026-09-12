@@ -39,23 +39,32 @@ pin passed to the constructor.
 See `examples/SerialAudio` for serial audio input and `examples/GeneratedTone`
 for a self-contained signal source.
 
-To stream microphone audio from a computer, install the Python dependencies
-listed in `examples/SerialAudio/requirements.txt`, then run:
+To stream microphone audio from a computer, create a Python virtual environment
+and install the dependencies:
 
 ```sh
-python3 -m pip install -r examples/SerialAudio/requirements.txt
-python3 examples/SerialAudio/stream_audio.py --port /dev/ttyUSB0
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r examples/SerialAudio/requirements.txt
+```
+
+With the virtual environment active, route the computer microphone to the
+board:
+
+```sh
+python examples/SerialAudio/stream_audio.py --port /dev/ttyUSB0 --mic
 ```
 
 Use `--list-devices` to inspect audio inputs and `--device NAME_OR_INDEX` to
-select one. The default input is mono 8 kHz audio, which fits comfortably
-within the serial link bandwidth.
+select one. `--mic` captures the computer microphone as mono 8 kHz audio and
+streams it to the board. Microphone mode is also the default when no `--file`
+or `--raw-file` option is given.
 
 To stream an MP3 file instead, install `ffmpeg` and run:
 
 ```sh
 sudo apt install ffmpeg
-python3 examples/SerialAudio/stream_audio.py \
+python examples/SerialAudio/stream_audio.py \
   --port /dev/ttyUSB0 \
   --file music.mp3
 ```
@@ -69,7 +78,7 @@ temporary file is removed afterward.
 To save the converted board-ready raw audio first, then stream that raw file:
 
 ```sh
-python3 examples/SerialAudio/stream_audio.py \
+python examples/SerialAudio/stream_audio.py \
   --port /dev/ttyUSB0 \
   --file music.mp3 \
   --raw-output music.raw
