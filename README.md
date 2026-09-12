@@ -3,7 +3,7 @@
 Transmit unsigned 8-bit audio samples as analog FM using a CC1101 module.
 
 <p align="center">
-  <img src="images/receiver-waterfall.png" alt="CC1101 Analog FM receiver waterfall" width="320">
+  <img src="images/receiver-waterfall.png" alt="CC1101 Analog FM receiver waterfall" width="920">
 </p>
 
 ## Basic use
